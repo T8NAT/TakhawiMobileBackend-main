@@ -1,0 +1,113 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Payment Status
+    style.
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 400px;
+      }
+
+      .status-card {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .status-card h2 {
+        margin-bottom: 10px;
+        font-size: 1.5rem;
+      }
+
+      .status-card p {
+        font-size: 1rem;
+      }
+
+      .icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        padding: 20px;
+        border-radius: 50%;
+        color: white;
+        line-height: 1;
+        width: 70px;
+        height: 70px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .success-icon {
+        background-color: #28a745;
+      }
+
+      .error-icon {
+        background-color: #dc3545;
+      }
+
+      .success {
+        border-left: 5px solid #28a745;
+      }
+
+      .error {
+        border-left: 5px solid #dc3545;
+      }
+
+      @media (max-width: 600px) {
+        .status-card h2 {
+          font-size: 1.3rem;
+        }
+
+        .status-card p {
+          font-size: 0.95rem;
+        }
+
+        .container {
+          width: 100%;
+          padding: 10px;
+        }
+
+        .icon {
+          font-size: 2rem;
+          width: 60px;
+          height: 60px;
+          padding: 15px;
+        }
+      }
+
+  body
+    .container
+      if status
+        .status-card.success
+          .icon.success-icon ✔
+          h2 Payment Successful!
+          p Your payment has been processed successfully.
+      else
+        .status-card.error
+          .icon.error-icon ✖
+          h2 Payment Failed
+          p= errorMessage

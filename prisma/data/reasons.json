@@ -1,0 +1,30 @@
+[
+  {
+    "ar_reason": "السائق تأخر كثيرا",
+    "en_reason": "Waiting for long time"
+  },
+  {
+    "ar_reason": "السائق رفض الذهاب إلى الوجهة",
+    "en_reason": "Driver denied to go to destination"
+  },
+  {
+    "ar_reason": "السائق لم يأتي",
+    "en_reason": "Unable to contact driver"
+  },
+  {
+    "ar_reason": "السائق رفض القدوم إلى موقع الاستلام",
+    "en_reason": "Driver denied to come to pick up location"
+  },
+  {
+    "ar_reason": "العنوان خاطئ",
+    "en_reason": "Wrong address shown"
+  },
+  {
+    "ar_reason": "السائق لم يأتي إلى موقع الاستلام",
+    "en_reason": "The price is not reasonable"
+  },
+  {
+    "ar_reason": "أخرى",
+    "en_reason": "Other"
+  }
+]

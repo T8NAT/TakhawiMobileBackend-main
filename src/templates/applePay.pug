@@ -1,0 +1,135 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Payment Page
+    style.
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .payment-card {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 300px;
+        text-align: center;
+      }
+      .company-name {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+      }
+      .price {
+        font-size: 20px;
+        color: #5a42e6;
+        margin-bottom: 20px;
+      }
+    //-   .paymentWidgets {
+    //-     width: 100%;
+    //-     background-color: #5a42e6;
+    //-     color: white;
+    //-     padding: 10px;
+    //-     border: none;
+    //-     font-size: 16px;
+    //-     border-radius: 5px;
+    //-     cursor: pointer;
+    //-   }
+
+  body
+    .payment-card
+      .company-name Takhwe
+      .price #{amount} SAR
+      form.paymentWidgets(action=`https://dev-dash-takhawe.hayah.tech/api/${path}`, data-brands="APPLEPAY")
+
+    script(
+      src=`https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${checkoutId}`
+    )
+    
+    script.
+        var subTotalAmount = 100;
+        var shippingAmount = 0;
+        var taxAmount = 0;
+        var currency = "SAR";
+        var applePayTotalLabel = "Takhawe";
+
+        function getAmount() {
+            return ((subTotalAmount + shippingAmount + taxAmount) / 100).toFixed(2);
+        }
+
+        function getTotal() {
+            return {
+            label: applePayTotalLabel,
+            amount: #{amount},
+            };
+        }
+
+        function getLineItems() {
+            return [
+            {
+                label: "Subtotal",
+                amount: (subTotalAmount / 100).toFixed(2),
+            },
+            {
+                label: "Shipping",
+                amount: (shippingAmount / 100).toFixed(2),
+            },
+            {
+                label: "Tax",
+                amount: (taxAmount / 100).toFixed(2),
+            },
+            ];
+        }
+
+        var wpwlOptions = {
+            applePay: {
+                version: 3,
+                //- checkAvailability: "applePayCapabilities",
+                //- merchantIdentifier: "merchant.merchentTakhawe",
+                apiVersion: "1.2.0-beta",
+                buttonSource: "js",
+                buttonStyle: "black",
+                buttonType: "pay",
+                displayName: "Takhawe",
+                total: getTotal(),
+                currencyCode: currency,
+                countryCode: "SA",
+                merchantCapabilities: ["supports3DS"],
+                supportedNetworks: ["masterCard", "visa", "mada"],
+                supportedCountries: ["SA"],
+                //- onCancel: function () {
+                //-     console.log("onCancel");
+                //-     alert("Apple Pay payment sheet was dismissed");
+                //- },
+                //- onPaymentMethodSelected: function (paymentMethod) {
+                //-     console.log("onPaymentMethodSelected: " + paymentMethod.type);
+                //-     alert("Payment method selected: " + paymentMethod.type);
+                //-     return {
+                //-     newTotal: getTotal(),
+                //-     newLineItems: getLineItems(),
+                //-     };
+                //- },
+                //- onPaymentAuthorized: function (payment) {
+                //-     console.log(
+                //-     "onPaymentAuthorized payment: " + JSON.stringify(payment)
+                //-     );
+                //-     alert("Payment authorized, processing payment...", JSON.stringify(payment));
+                //-     return {
+                //-         status: "SUCCESS",
+                //-         //- errors: [{
+                //-         //-     code: "shippingContactInvalid",
+                //-         //-     contactField: "phoneNumber",
+                //-         //-     message: "Invalid phone number"
+                //-         //- }]
+                //-     };
+                //- },
+                },
+        };

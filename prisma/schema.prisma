@@ -1,0 +1,717 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                            Int                            @id @default(autoincrement())
+  uuid                          String                         @unique @default(uuid())
+  name                          String
+  phone                         String                         @unique
+  email                         String                         @unique
+  password                      String
+  role                          String                         @default("USER")
+  avatar                        String?
+  birth_date                    DateTime?
+  bio                           String?
+  national_id                   String?
+  gender                        String
+  // TODO: Add enum for online_status and apply logic in the code
+  online_status                 String                         @default("OFFLINE")
+  user_wallet_balance           Float                          @default(1000)
+  driver_wallet_balance         Float                          @default(1000)
+  profile_complted              Int                            @default(50)
+  passenger_cancel_count        Int                            @default(0)
+  driver_cancel_count           Int                            @default(0)
+  location                      Json                           @default("{\"lat\": 0, \"lng\": 0}")
+  prefered_language             String                         @default("en")
+  phone_verified                Boolean                        @default(false)
+  driver_status                 String                         @default("REGISTERED")
+  passenger_status              String                         @default("REGISTERED")
+  wasl_registration_status      String                         @default("NOT_REGISTERED")
+  switch_to_driver              Boolean                        @default(false)
+  is_blocked                    Boolean                        @default(false)
+  discount_app_share_count      Int                            @default(0)
+  createdAt                     DateTime                       @default(now())
+  updatedAt                     DateTime                       @updatedAt
+  deletedAt                     DateTime?
+  passenger_rate                Float                          @default(5)
+  driver_rate                   Float                          @default(5)
+  cityId                        Int?
+  City                          City?                          @relation(fields: [cityId], references: [id])
+  User_Code                     User_Code?
+  Hobbies                       Hobbies[]
+  Address                       Address[]
+  Promo_Code                    Promo_Code[]
+  Used_Promo_Code               Used_Promo_Code[]
+  Complaints                    Complaint[]
+  Vehicles                      Vehicle[]
+  Issue                         Issue[]
+  Driver_Trips                  Trip[]
+  VIP_Trips                     VIP_Trip[]
+  Basic_Trip                    Passenger_Trip[]
+  Offers                        Offers[]
+  Passenger_Wallet_Transaction  Passenger_Wallet_Transaction[]
+  Driver_Wallet_Transaction     Driver_Wallet_Transaction[]
+  User_Documents                User_Documents[]
+  Passnger_Vip_Trip_Cancelation Vip_Trip_Cancelation[]         @relation("Passnger")
+  Driver_Vip_Trip_Cancelation   Vip_Trip_Cancelation[]         @relation("Driver")
+  Basic_Trip_Cancellation       Basic_Trip_Cancellation[]
+  Passenger_Trip_Cancellation   Passenger_Trip_Cancellation[]
+  Reviewers                     Reviews[]                      @relation("Reviewers")
+  Targets                       Reviews[]                      @relation("Targets")
+  Recent_Addresses              Recent_Address[]
+  Notifications                 Notification[]
+  Favorite_Drivers              Favorite_Driver[]              @relation("User") // Refers to drivers added to favorites by the user
+  Users_Have_In_List            Favorite_Driver[]              @relation("Driver") // Users who have marked this user as their favorite driver
+  User_FCM_Tokens               User_FCM_Token[]
+  User_Chats                    Chat[]                         @relation("User")
+  Driver_Chats                  Chat[]                         @relation("Driver")
+  Message                       Message[]
+  Saved_Card                    Saved_Card[]
+  ChatRoom                      ChatRoom[]
+  Settlement_Requests           Settlement_Request[]
+  User_Billing_Info             User_Billing_Info?
+  Credit_Card_Transaction       Credit_Card_Transaction[]
+}
+
+model User_FCM_Token {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  createdAt DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model Favorite_Driver {
+  userId    Int
+  driverId  Int
+  createdAt DateTime @default(now())
+
+  User   User @relation("User", fields: [userId], references: [id])
+  Driver User @relation("Driver", fields: [driverId], references: [id])
+
+  @@id([userId, driverId])
+}
+
+model Reviews {
+  id          Int       @id @default(autoincrement())
+  rate        Float
+  note        String?
+  type        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  reviewer_id Int
+  target_id   Int
+  trip_id     Int
+  Reviewers   User      @relation("Reviewers", fields: [reviewer_id], references: [id])
+  Targets     User      @relation("Targets", fields: [target_id], references: [id])
+  Trip        Trip      @relation(fields: [trip_id], references: [id])
+}
+
+model User_Code {
+  id                         Int       @id @default(autoincrement())
+  email_expire_date          DateTime?
+  email_verify_code          String?
+  phone_expire_date          DateTime?
+  phone_verify_code          String?
+  reset_password_code        String?
+  reset_password_expire_date DateTime?
+  userId                     Int       @unique
+  User                       User      @relation(fields: [userId], references: [id])
+}
+
+model City {
+  id                Int                @id @default(autoincrement())
+  ar_name           String
+  en_name           String
+  postcode          String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  deletedAt         DateTime?
+  Users             User[]
+  Meeting_Locations Meeting_Location[]
+}
+
+model Complaint {
+  id           Int      @id @default(autoincrement())
+  category     String?
+  note         String
+  is_complaint Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       Int
+  User         User     @relation(fields: [userId], references: [id])
+}
+
+model Meeting_Location {
+  id                    Int          @id @default(autoincrement())
+  ar_name               String
+  en_name               String
+  location              Json         @default("{\"lat\": 0, \"lng\": 0}")
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  deletedAt             DateTime?
+  cityId                Int
+  City                  City         @relation(fields: [cityId], references: [id])
+  Trip_Pickup_Locations Basic_Trip[] @relation("Pickup_Location")
+  Trip_Destinations     Basic_Trip[] @relation("Destination")
+}
+
+model Address {
+  id          Int       @id @default(autoincrement())
+  lat         Float
+  lng         Float
+  alias       String
+  description String?
+  is_favorite Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  userId      Int
+  User        User      @relation(fields: [userId], references: [id])
+
+  @@unique([userId, lat, lng], name: "Unique_Address")
+}
+
+model Recent_Address {
+  id          Int      @id @default(autoincrement())
+  lat         Float
+  lng         Float
+  alias       String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      Int
+  User        User     @relation(fields: [userId], references: [id])
+}
+
+model Hobbies {
+  id        Int      @id @default(autoincrement())
+  ar_name   String
+  en_name   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User[]
+}
+
+model Promo_Code {
+  id              Int               @id @default(autoincrement())
+  code            String
+  from            DateTime
+  to              DateTime
+  type            String
+  is_active       Boolean           @default(true)
+  amount          Float
+  max_discount    Int?
+  limit           Int
+  time_used       Int               @default(0)
+  limit_per_user  Int               @default(1)
+  userId          Int?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+  User            User?             @relation(fields: [userId], references: [id])
+  Used_Promo_Code Used_Promo_Code[]
+  Vip_Trip        VIP_Trip[]
+  Passenger_Trip  Passenger_Trip[]
+}
+
+model Vehicle {
+  id                Int                @id @default(autoincrement())
+  serial_no         String
+  plate_alphabet    String
+  plate_alphabet_ar String             @default("")
+  plate_number      String
+  seats_no          Int
+  production_year   Int
+  driverId          Int
+  vehicle_color_id  Int
+  vehicle_class_id  Int
+  vehicle_type_id   Int
+  vehicle_name_id   Int
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  deletedAt         DateTime?
+  Owner             User               @relation(fields: [driverId], references: [id])
+  Vehicle_Image     Vehicle_Image[]
+  Insurance_Image   Vehicle_Insurance?
+  Vehicle_Color     Vehicle_Color      @relation(fields: [vehicle_color_id], references: [id])
+  Vehicle_Class     Vehicle_Class      @relation(fields: [vehicle_class_id], references: [id])
+  Vehicle_Type      Vehicle_Type       @relation(fields: [vehicle_type_id], references: [id])
+  Vehicle_Name      Vehicle_Name       @relation(fields: [vehicle_name_id], references: [id])
+  Vehicle_Licence   Vehicle_Licence[]
+  Trip              Trip[]
+  Offers            Offers[]
+}
+
+model Vehicle_Production_Start_Year {
+  start_year Int      @unique @default(2000)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Vehicle_Color {
+  id        Int       @id @default(autoincrement())
+  ar_name   String    @unique
+  en_name   String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Vehicle   Vehicle[]
+}
+
+model Vehicle_Class {
+  id        Int       @id @default(autoincrement())
+  ar_name   String    @unique
+  en_name   String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Vehicle   Vehicle[]
+}
+
+model Vehicle_Type {
+  id        Int       @id @default(autoincrement())
+  ar_name   String    @unique
+  en_name   String    @unique
+  file_path String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Vehicle   Vehicle[]
+}
+
+model Vehicle_Name {
+  id        Int       @id @default(autoincrement())
+  ar_name   String    @unique
+  en_name   String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Vehicle   Vehicle[]
+}
+
+model Vehicle_Image {
+  id         Int      @id @default(autoincrement())
+  file_path  String
+  vehicle_id Int?
+  temp_id    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Vehicle    Vehicle? @relation(fields: [vehicle_id], references: [id])
+}
+
+model Vehicle_Licence {
+  id         Int      @id @default(autoincrement())
+  file_path  String
+  vehicle_id Int?
+  temp_id    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Vehicle    Vehicle? @relation(fields: [vehicle_id], references: [id])
+}
+
+model Vehicle_Insurance {
+  id         Int      @id @default(autoincrement())
+  file_path  String
+  vehicle_id Int?     @unique
+  temp_id    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Vehicle    Vehicle? @relation(fields: [vehicle_id], references: [id])
+}
+
+model User_Documents {
+  id        Int      @id @default(autoincrement())
+  type      String
+  file_path String?
+  is_exist  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  User      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, type])
+}
+
+model Used_Promo_Code {
+  userId        Int
+  promo_code_id Int
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  User          User       @relation(fields: [userId], references: [id])
+  Promo_Code    Promo_Code @relation(fields: [promo_code_id], references: [id])
+
+  @@id([userId, promo_code_id])
+}
+
+model Reason {
+  id        Int       @id @default(autoincrement())
+  ar_reason String
+  en_reason String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  Issues    Issue[]
+}
+
+model Issue {
+  id        Int       @id @default(autoincrement())
+  note      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  userId    Int
+  tripId    Int
+  reasonId  Int
+  User      User      @relation(fields: [userId], references: [id])
+  Trip      Trip      @relation(fields: [tripId], references: [id])
+  Reason    Reason    @relation(fields: [reasonId], references: [id])
+}
+
+model Wasl_trip_log {
+  id          Int      @id @default(autoincrement())
+  trip_id     Int
+  status      Boolean
+  result_code String
+  result_msg  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Trip        Trip     @relation(fields: [trip_id], references: [id])
+}
+
+model Trip {
+  id                           Int                            @id @default(autoincrement())
+  start_date                   DateTime
+  end_date                     DateTime?
+  pickup_time                  DateTime?
+  status                       String                         @default("PENDING")
+  price                        Float                          @default(0)
+  discount                     Float                          @default(0)
+  driver_app_share             Float                          @default(0)
+  user_app_share               Float                          @default(0)
+  user_debt                    Float                          @default(0)
+  user_tax                     Float                          @default(0)
+  driver_tax                   Float                          @default(0)
+  gender                       String
+  type                         String
+  distance                     Float                          @default(0)
+  createdAt                    DateTime                       @default(now())
+  updatedAt                    DateTime                       @updatedAt
+  deletedAt                    DateTime?
+  features                     String[]
+  driver_id                    Int?
+  vehicle_id                   Int?
+  Driver                       User?                          @relation(fields: [driver_id], references: [id])
+  Vehicle                      Vehicle?                       @relation(fields: [vehicle_id], references: [id])
+  Issues                       Issue[]
+  VIP_Trip                     VIP_Trip?
+  Basic_Trip                   Basic_Trip?
+  Passenger_Wallet_Transaction Passenger_Wallet_Transaction[]
+  Driver_Wallet_Transaction    Driver_Wallet_Transaction[]
+  Passenger_Trip_Cancellation  Passenger_Trip_Cancellation[]
+  Reviews                      Reviews[]
+  Chat                         Chat[]
+  Wasl_trip_log                Wasl_trip_log[]
+}
+
+model Basic_Trip_Cancellation {
+  trip_id    Int        @unique
+  driver_id  Int
+  reason     String
+  note       String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  deletedAt  DateTime?
+  Basic_Trip Basic_Trip @relation(fields: [trip_id], references: [trip_id])
+  Driver     User       @relation(fields: [driver_id], references: [id])
+}
+
+model VIP_Trip {
+  pickup_location_lat      Float
+  pickup_location_lng      Float
+  pickup_description       String
+  destination_location_lat Float
+  destination_location_lng Float
+  destination_description  String
+  discount                 Float    @default(0)
+  app_share_discount       Float    @default(0)
+  user_app_share           Float    @default(0)
+  user_debt                Float    @default(0)
+  payment_status           String?
+  payment_method           String?
+  promoCodeId              Int?
+  passnger_id              Int
+  trip_id                  Int      @unique
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  Passnger    User                  @relation(fields: [passnger_id], references: [id])
+  Trip        Trip                  @relation(fields: [trip_id], references: [id], onDelete: Cascade)
+  Offers      Offers[]
+  Cancelation Vip_Trip_Cancelation?
+  Promo_Code  Promo_Code?           @relation(fields: [promoCodeId], references: [id])
+}
+
+model Vip_Trip_Cancelation {
+  id           Int      @id @default(autoincrement())
+  reason       String
+  note         String?
+  canceled_by  String
+  passenger_id Int
+  driver_id    Int
+  createdAt    DateTime @default(now())
+  trip_id      Int      @unique
+  Passnger     User     @relation("Passnger", fields: [passenger_id], references: [id])
+  Driver       User     @relation("Driver", fields: [driver_id], references: [id])
+  Trip         VIP_Trip @relation(fields: [trip_id], references: [trip_id])
+}
+
+model Basic_Trip {
+  trip_id                 Int                      @unique
+  seats_no                Int
+  available_seats_no      Int
+  price_per_seat          Float
+  pickup_location_id      Int
+  destination_id          Int
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  deletedAt               DateTime?
+  Pickup_Location         Meeting_Location         @relation("Pickup_Location", fields: [pickup_location_id], references: [id])
+  Destination             Meeting_Location         @relation("Destination", fields: [destination_id], references: [id])
+  Trip                    Trip                     @relation(fields: [trip_id], references: [id], onDelete: Cascade)
+  Passengers              Passenger_Trip[]
+  Basic_Trip_Cancellation Basic_Trip_Cancellation?
+}
+
+model Passenger_Trip {
+  id                 Int      @id @default(autoincrement())
+  trip_id            Int
+  passenger_id       Int
+  payment_status     String
+  payment_method     String
+  app_share_discount Float    @default(0)
+  user_app_share     Float    @default(0)
+  user_debt          Float    @default(0)
+  user_tax           Float    @default(0)
+  discount           Float    @default(0)
+  driver_app_share   Float    @default(0)
+  status             String   @default("JOINED")
+  promo_code_id      Int?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  transactionId      String?
+
+  Basic_Trip                  Basic_Trip                    @relation(fields: [trip_id], references: [trip_id])
+  Passnger                    User                          @relation(fields: [passenger_id], references: [id])
+  Promo_Code                  Promo_Code?                   @relation(fields: [promo_code_id], references: [id])
+  Passenger_Trip_Cancellation Passenger_Trip_Cancellation[]
+}
+
+model Passenger_Trip_Cancellation {
+  id                Int       @id @default(autoincrement())
+  passenger_trip_id Int
+  passenger_id      Int
+  trip_id           Int
+  reason            String
+  note              String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+
+  Passenger_Trip Passenger_Trip @relation(fields: [passenger_trip_id], references: [id])
+  Passenger      User           @relation(fields: [passenger_id], references: [id])
+  Trip           Trip           @relation(fields: [trip_id], references: [id])
+}
+
+model Offers {
+  id                 Int      @id @default(autoincrement())
+  price              Float
+  app_share_discount Float    @default(0)
+  user_app_share     Float    @default(0)
+  status             String   @default("PENDING")
+  features           String[]
+  driver_id          Int
+  trip_id            Int
+  vehicle_id         Int
+  transactionId      String?
+  createdAt          DateTime @default(now())
+  Driver             User     @relation(fields: [driver_id], references: [id])
+  Trip               VIP_Trip @relation(fields: [trip_id], references: [trip_id], onDelete: Cascade)
+  Vehicle            Vehicle  @relation(fields: [vehicle_id], references: [id])
+}
+
+model Passenger_Wallet_Transaction {
+  id               Int       @id @default(autoincrement())
+  transaction_type String
+  current_balance  Float
+  previous_balance Float
+  amount           Float
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+  trip_id          Int?
+  passenger_id     Int
+  Passenger        User      @relation(fields: [passenger_id], references: [id])
+  Trip             Trip?     @relation(fields: [trip_id], references: [id])
+}
+
+model Driver_Wallet_Transaction {
+  id               Int       @id @default(autoincrement())
+  transaction_type String
+  previous_balance Float
+  current_balance  Float
+  amount           Float
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  deletedAt        DateTime?
+  driver_id        Int
+  trip_id          Int?
+  Driver           User      @relation(fields: [driver_id], references: [id])
+  Trip             Trip?     @relation(fields: [trip_id], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  ar_title  String
+  ar_body   String
+  en_title  String
+  en_body   String
+  type      String
+  is_read   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model Terms_And_Conditions {
+  id         Int      @id @default(autoincrement())
+  ar_content String
+  en_content String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Privacy_Policy {
+  id         Int      @id @default(autoincrement())
+  ar_content String
+  en_content String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Chat {
+  id        String  @id @default(uuid())
+  userId    Int
+  driverId  Int
+  tripId    Int
+  is_active Boolean @default(true)
+
+  User     User       @relation("User", fields: [userId], references: [id])
+  Driver   User       @relation("Driver", fields: [driverId], references: [id])
+  Trip     Trip       @relation(fields: [tripId], references: [id])
+  Messages Message[]
+  ChatRoom ChatRoom[]
+
+  @@unique([userId, driverId, tripId])
+}
+
+model ChatRoom {
+  userId   Int
+  socketId String
+  chatId   String
+
+  User User @relation(fields: [userId], references: [id])
+  Chat Chat @relation(fields: [chatId], references: [id])
+
+  @@unique([userId, chatId, socketId])
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  content     String
+  contentType String
+  createdAt   DateTime @default(now())
+  chatId      String
+  is_read     Boolean  @default(false)
+  senderId    Int
+
+  Chat   Chat @relation(fields: [chatId], references: [id])
+  Sender User @relation(fields: [senderId], references: [id])
+}
+
+model Saved_Card {
+  id                      Int                       @id @default(autoincrement())
+  token                   String
+  card_number             String
+  card_exp_month          String
+  card_exp_year           String
+  card_holder             String
+  payment_brand           String
+  user_id                 Int
+  recurringAgreementId    String
+  initialTransactionId    String?
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  deletedAt               DateTime?
+  User                    User                      @relation(fields: [user_id], references: [id])
+  Credit_Card_Transaction Credit_Card_Transaction[]
+
+  @@unique([card_number, card_exp_month, card_exp_year, payment_brand, user_id], name: "Unique_Card")
+}
+
+model User_Billing_Info {
+  id        Int      @id @default(autoincrement())
+  street    String
+  surname   String
+  state     String
+  createdAt DateTime @default(now())
+  userId    Int      @unique
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model Credit_Card_Transaction {
+  id                    Int        @id @default(autoincrement())
+  amount                Float
+  merchantTransactionId String
+  createdAt             DateTime   @default(now())
+  card_id               Int
+  user_id               Int
+  User                  User       @relation(fields: [user_id], references: [id])
+  Saved_Card            Saved_Card @relation(fields: [card_id], references: [id])
+}
+
+model Settlement_Request {
+  id                  Int      @id @default(autoincrement())
+  status              String   @default("PENDING")
+  holder_name         String
+  bank_name           String
+  bank_account_number String
+  iban                String
+  amount              Float
+  user_id             Int
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  User                User     @relation(fields: [user_id], references: [id])
+}
+
+model Warning {
+  id              Int       @id @default(autoincrement())
+  location        Json
+  en_type         String
+  ar_type         String
+  createdAt       DateTime  @default(now())
+  expiration_date DateTime?
+}
+
+model App_Config {
+  id        Int      @id @default(autoincrement())
+  key       String
+  value     String
+  type      String   @default("TEXT")
+  createdAt DateTime @default(now())
+}
