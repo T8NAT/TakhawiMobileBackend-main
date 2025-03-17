@@ -11,7 +11,7 @@ import setLanguage from './src/middlewares/set-language';
 import { server, app, i18nInit } from './src/utils/socket';
 import cronJobs from './src/cron-jobs';
 import bodyParser from 'body-parser';
-import idRoutes from './src/routers/idRoutes';
+import { nafathRoutes } from './src/routers/nafathRoutes';
 import paymentGatewayService from './src/services/paymentGatewayService';
 
 config();
@@ -65,7 +65,9 @@ app.get(
 app.use(bodyParser.json());
 
 // إضافة الـ route الخاصة بالتحقق من الهوية
-app.use('/api', idRoutes);
+app.use(express.json());
+
+app.use('/api/v1/mfa', nafathRoutes);
 
 app.post('/apple-pay', (req: Request, res: Response) => {
   res.send({
