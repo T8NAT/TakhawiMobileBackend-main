@@ -1,0 +1,202 @@
+[
+    {
+        "ar_name": "الرياض",
+        "en_name": "Riyadh",
+        "postcode": "11564"
+    },
+    {
+        "ar_name": "جدة",
+        "en_name": "Jeddah",
+        "postcode": "21577"
+    },
+    {
+        "ar_name": "مكة المكرمة",
+        "en_name": "Mecca",
+        "postcode": "21955"
+    },
+    {
+        "ar_name": "المدينة المنورة",
+        "en_name": "Medina",
+        "postcode": "41311"
+    },
+    {
+        "ar_name": "الدمام",
+        "en_name": "Dammam",
+        "postcode": "31411"
+    },
+    {
+        "ar_name": "بريدة",
+        "en_name": "Buraidah",
+        "postcode": "51411"
+    },
+    {
+        "ar_name": "تبوك",
+        "en_name": "Tabuk",
+        "postcode": "71411"
+    },
+    {
+        "ar_name": "الخبر",
+        "en_name": "Khobar",
+        "postcode": "31952"
+    },
+    {
+        "ar_name": "أبها",
+        "en_name": "Abha",
+        "postcode": "62521"
+    },
+    {
+        "ar_name": "حائل",
+        "en_name": "Hail",
+        "postcode": "55431"
+    },
+    {
+        "ar_name": "نجران",
+        "en_name": "Najran",
+        "postcode": "55461"
+    },
+    {
+        "ar_name": "الطائف",
+        "en_name": "Taif",
+        "postcode": "21944"
+    },
+    {
+        "ar_name": "الأحساء",
+        "en_name": "Al-Ahsa",
+        "postcode": "36361"
+    },
+    {
+        "ar_name": "القطيف",
+        "en_name": "Qatif",
+        "postcode": "31911"
+    },
+    {
+        "ar_name": "الخرج",
+        "en_name": "Al-Kharj",
+        "postcode": "16273"
+    },
+    {
+        "ar_name": "أبو عريش",
+        "en_name": "Abu Arish",
+        "postcode": "88311"
+    },
+    {
+        "ar_name": "حفر الباطن",
+        "en_name": "Hafar Al-Batin",
+        "postcode": "31991"
+    },
+    {
+        "ar_name": "الجبيل",
+        "en_name": "Jubail",
+        "postcode": "35714"
+    },
+    {
+        "ar_name": "ضباء",
+        "en_name": "Dhahran",
+        "postcode": "48912"
+    },
+    {
+        "ar_name": "ينبع",
+        "en_name": "Yanbu",
+        "postcode": "41912"
+    },
+    {
+        "ar_name": "القريات",
+        "en_name": "Al-Qurayyat",
+        "postcode": "77611"
+    },
+    {
+        "ar_name": "عرعر",
+        "en_name": "Arar",
+        "postcode": "73311"
+    },
+    {
+        "ar_name": "الظهران",
+        "en_name": "Dhahran",
+        "postcode": " Dhahran 34461"
+    },
+    {
+        "ar_name": "الباحة",
+        "en_name": "Al-Baha",
+        "postcode": "65526"
+    },
+    {
+        "ar_name": "الزلفي",
+        "en_name": "Al-Zulfi",
+        "postcode": "11932"
+    },
+    {
+        "ar_name": "بيشة",
+        "en_name": "Bisha",
+        "postcode": "67714"
+    },
+    {
+        "ar_name": "الرس",
+        "en_name": "Ar-Rass",
+        "postcode": "51921"
+    },
+    {
+        "ar_name": "سكاكا",
+        "en_name": "Sakaka",
+        "postcode": "72341"
+    },
+    {
+        "ar_name": "جازان",
+        "en_name": "Jazan",
+        "postcode": "45142"
+    },
+    {
+        "ar_name": "حقل",
+        "en_name": "Haql",
+        "postcode": "71911"
+    },
+    {
+        "ar_name": "الشقيق",
+        "en_name": "Ash-Shuqaiq",
+        "postcode": "62954"
+    },
+    {
+        "ar_name": "الدوادمي",
+        "en_name": "Al-Dawadmi",
+        "postcode": "11911"
+    },
+    {
+        "ar_name": "رابغ",
+        "en_name": "Rabigh",
+        "postcode": "21911"
+    },
+    {
+        "ar_name": "شرورة",
+        "en_name": "Sharurah",
+        "postcode": "47311"
+    },
+    {
+        "ar_name": "طريف",
+        "en_name": "Turaif",
+        "postcode": "74811"
+    },
+    {
+        "ar_name": "العرضيات",
+        "en_name": "Al-Ula",
+        "postcode": "43552"
+    },
+    {
+        "ar_name": "سيهات",
+        "en_name": "Sihat",
+        "postcode": "32415"
+    },
+    {
+        "ar_name": "تربة",
+        "en_name": "Tarout",
+        "postcode": "22423"
+    },
+    {
+        "ar_name": "ظهران الجنوب",
+        "en_name": "Dhahran Al-Janub",
+        "postcode": "61973"
+    },
+    {
+        "ar_name": "العيون",
+        "en_name": "Al-Ayun",
+        "postcode": "24674"
+    }
+]

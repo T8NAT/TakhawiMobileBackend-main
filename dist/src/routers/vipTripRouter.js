@@ -1,0 +1,27 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const vipTripController_1 = __importDefault(require("../controllers/vipTripController"));
+const auth_1 = __importDefault(require("../middlewares/auth"));
+const authorization_1 = __importDefault(require("../middlewares/authorization"));
+const joiMiddleware_1 = __importDefault(require("../middlewares/joiMiddleware"));
+const vipTripValidations_1 = require("../validations/vipTripValidations");
+const roles_1 = require("../enum/roles");
+const processPaymentMiddleware_1 = require("../middlewares/processPaymentMiddleware");
+const offerController_1 = __importDefault(require("../controllers/offerController"));
+const router = (0, express_1.Router)();
+router.use(auth_1.default);
+router.post('/', (0, joiMiddleware_1.default)(vipTripValidations_1.createVipTripSchema), (0, authorization_1.default)(roles_1.Roles.USER), vipTripController_1.default.create);
+router.get('/offers/:trip_id', vipTripController_1.default.getTripOffers);
+router.get('/:id', vipTripController_1.default.getOne);
+router.delete('/:trip_id', (0, authorization_1.default)(roles_1.Roles.USER), (0, joiMiddleware_1.default)(vipTripValidations_1.cancelTripSchema), vipTripController_1.default.cancel);
+router.post('/make-offer/:trip_id', (0, authorization_1.default)(roles_1.Roles.DRIVER), (0, joiMiddleware_1.default)(vipTripValidations_1.createOfferSchema), offerController_1.default.makeOffer);
+router.post('/accept-offer/:offer_id', (0, authorization_1.default)(roles_1.Roles.USER), (0, joiMiddleware_1.default)(vipTripValidations_1.acceptOfferSchema), processPaymentMiddleware_1.processPaymentMiddleware, offerController_1.default.acceptOffer);
+router.delete('/reject-offer/:offer_id', (0, authorization_1.default)(roles_1.Roles.USER), offerController_1.default.rejectOffer);
+router.delete('/cancel-by-driver/:trip_id', (0, authorization_1.default)(roles_1.Roles.DRIVER), (0, joiMiddleware_1.default)(vipTripValidations_1.cancelTripSchema), vipTripController_1.default.driverCancelation);
+router.patch('/end-trip/:trip_id', (0, authorization_1.default)(roles_1.Roles.DRIVER), vipTripController_1.default.endTrip);
+router.post('/calculate-price/:offerId', offerController_1.default.calculateOfferPrice);
+exports.default = router;

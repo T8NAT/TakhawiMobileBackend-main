@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const messageController_1 = __importDefault(require("../controllers/messageController"));
+const auth_1 = __importDefault(require("../middlewares/auth"));
+const roles_1 = require("../enum/roles");
+const authorization_1 = __importDefault(require("../middlewares/authorization"));
+const joiMiddleware_1 = __importDefault(require("../middlewares/joiMiddleware"));
+const chatValidations_1 = require("../validations/chatValidations");
+const multer_1 = __importDefault(require("../middlewares/multer"));
+const multerTypeValidation_1 = require("../middlewares/multerTypeValidation");
+const router = (0, express_1.Router)();
+router.use(auth_1.default, (0, authorization_1.default)(roles_1.Roles.USER, roles_1.Roles.DRIVER));
+router.post('/send-message', multer_1.default.single('content'), (0, multerTypeValidation_1.validateMulterType)(['jpeg', 'png', 'jpg'], true), (0, joiMiddleware_1.default)(chatValidations_1.sendMessageSchema), messageController_1.default.sendMessage);
+router.get('/:chatId', messageController_1.default.getAll);
+router.patch('/:chatId', messageController_1.default.markAllAsRead);
+exports.default = router;

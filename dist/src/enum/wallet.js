@@ -1,0 +1,21 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TransactionType = void 0;
+var TransactionType;
+(function (TransactionType) {
+    TransactionType["APP_SHARE"] = "APP SHARE";
+    TransactionType["USER_APP_SHARE"] = "USER APP SHARE";
+    TransactionType["BOOK_TRIP"] = "BOOK TRIP";
+    TransactionType["COMPLETE_TRIP"] = "COMPLETE TRIP";
+    TransactionType["DEBT_PAYMENT"] = "DEBT PAYMENT";
+    TransactionType["DEBT_UNPAID"] = "DEBT UNPAID";
+    TransactionType["USER_DEBT"] = "USER DEBT";
+    TransactionType["CANCELATION_PENALTY"] = "CANCELATION PENALTY";
+    TransactionType["CANCELATION_COMPENSATION"] = "CANCELATION COMPENSATION";
+    TransactionType["CANCELATION_REFUND"] = "CANCELATION REFUND";
+    TransactionType["DISCOUNT_REFUND"] = "DISCOUNT REFUND";
+    TransactionType["SETTLEMENT_REQUEST"] = "SETTLEMENT REQUEST";
+    TransactionType["SETTLEMENT_REQUEST_CANCEL"] = "CANCEL SETTLEMENT REQUEST";
+    TransactionType["SETTLEMENT_REQUEST_DENY"] = "DENY SETTLEMENT REQUEST";
+    TransactionType["WALLET_RECHARGE"] = "WALLET RECHARGE";
+})(TransactionType || (exports.TransactionType = TransactionType = {}));

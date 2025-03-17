@@ -1,0 +1,10 @@
+import Joi from 'joi';
+import { SignUpType, LoginType, ChangePasswordType } from '../types/authType';
+export declare const signUpValidationSchema: Joi.ObjectSchema<SignUpType>;
+export declare const loginValidationSchema: Joi.ObjectSchema<LoginType>;
+export declare const checkPhoneExistValidationSchema: Joi.ObjectSchema<any>;
+export declare const checkEmailExistValidationSchema: Joi.ObjectSchema<any>;
+export declare const verifyResetCodeValidationSchema: Joi.ObjectSchema<any>;
+export declare const resetPasswordValidationSchema: Joi.ObjectSchema<any>;
+export declare const changePasswordValidations: Joi.ObjectSchema<ChangePasswordType>;
+export declare const verifyPhoneCodeSchema: Joi.ObjectSchema<any>;

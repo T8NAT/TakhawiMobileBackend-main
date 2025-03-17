@@ -1,0 +1,23 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const tripController_1 = __importDefault(require("../controllers/tripController"));
+const auth_1 = __importDefault(require("../middlewares/auth"));
+const authorization_1 = __importDefault(require("../middlewares/authorization"));
+const roles_1 = require("../enum/roles");
+const joiMiddleware_1 = __importDefault(require("../middlewares/joiMiddleware"));
+const tripValidations_1 = require("../validations/tripValidations");
+const router = (0, express_1.Router)();
+router.use(auth_1.default);
+router.get('/completed-trips', tripController_1.default.getCompletedTrips);
+router.get('/cancelled-trips', tripController_1.default.getCancelledTrips);
+router.get('/upcoming-trips', tripController_1.default.getUpcomingTrips);
+router.get('/nearby-vip-trips', (0, joiMiddleware_1.default)(tripValidations_1.nearByVipTripsSchema, 'query'), tripController_1.default.getNearByVipTrips);
+router.get('/nearby-by-distance', (0, joiMiddleware_1.default)(tripValidations_1.getNearByVipTripsByDistanceSchema, 'query'), tripController_1.default.getNearByVipTripsByDistance);
+router.get('/:tripId', tripController_1.default.getOne);
+router.get('/', (0, authorization_1.default)(roles_1.Roles.ADMIN, roles_1.Roles.SUPER_ADMIN), (0, joiMiddleware_1.default)(tripValidations_1.tripQueryTypeValidation, 'query'), tripController_1.default.getTrips);
+router.patch('/trip-status/:tripId', (0, joiMiddleware_1.default)(tripValidations_1.updateTripStatusSchema), tripController_1.default.updateTripStatus);
+exports.default = router;

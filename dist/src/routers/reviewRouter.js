@@ -1,0 +1,21 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const reviewController_1 = __importDefault(require("../controllers/reviewController"));
+const reviewValidations_1 = require("../validations/reviewValidations");
+const joiMiddleware_1 = __importDefault(require("../middlewares/joiMiddleware"));
+const auth_1 = __importDefault(require("../middlewares/auth"));
+const authorization_1 = __importDefault(require("../middlewares/authorization"));
+const roles_1 = require("../enum/roles");
+const router = (0, express_1.Router)();
+router.use(auth_1.default);
+router.post('/driver', (0, authorization_1.default)(roles_1.Roles.USER), (0, joiMiddleware_1.default)(reviewValidations_1.createReviewValidation), reviewController_1.default.createDriverReview);
+router.post('/passenger', (0, authorization_1.default)(roles_1.Roles.DRIVER), (0, joiMiddleware_1.default)(reviewValidations_1.createReviewValidation), reviewController_1.default.createPassengerReview);
+router.get('/my-reviews', reviewController_1.default.getMyReviews);
+router.get('/target/:target_id', reviewController_1.default.getReviewsByTargetId);
+router.get('/:id', reviewController_1.default.getOne);
+router.get('/', (0, authorization_1.default)(roles_1.Roles.ADMIN, roles_1.Roles.SUPER_ADMIN), (0, joiMiddleware_1.default)(reviewValidations_1.reviewTypeQueryValidation, 'query'), reviewController_1.default.getAll);
+exports.default = router;

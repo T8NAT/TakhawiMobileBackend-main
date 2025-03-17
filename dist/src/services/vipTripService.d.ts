@@ -1,0 +1,75 @@
+import { IVipTripService } from '../interfaces/vipTripService';
+import { CancelTrip, CreateVipTrip, Offer, VipTrip } from '../types/vipTripType';
+import { PaginateType } from '../types/paginateType';
+import { DriverCancelationReturn, EndTrip, UserCancelationReturn } from '../types/tripType';
+export declare class VipTripService implements IVipTripService {
+    create(data: CreateVipTrip): Promise<VipTrip>;
+    cancel(trip_id: number, userId: number, data: CancelTrip): Promise<UserCancelationReturn | undefined>;
+    driverCancelation(trip_id: number, driver_id: number, data: CancelTrip): Promise<DriverCancelationReturn>;
+    getTripOffers(trip_id: number, queryString: any): Promise<PaginateType<Offer[]>>;
+    endTrip(driver_id: number, trip_id: number): Promise<EndTrip>;
+    getOne(trip_id: number): Promise<{
+        Trip: {
+            id: number;
+            start_date: Date;
+            end_date: Date | null;
+            pickup_time: Date | null;
+            status: string;
+            price: number;
+            discount: number;
+            driver_app_share: number;
+            user_app_share: number;
+            user_debt: number;
+            user_tax: number;
+            driver_tax: number;
+            gender: string;
+            type: string;
+            distance: number;
+            createdAt: Date;
+            updatedAt: Date;
+            deletedAt: Date | null;
+            features: string[];
+            driver_id: number | null;
+            vehicle_id: number | null;
+        };
+        Passnger: {
+            id: number;
+            name: string;
+            avatar: string | null;
+            passenger_rate: number;
+            Hobbies: {
+                id: number;
+                ar_name: string;
+                en_name: string;
+                createdAt: Date;
+                updatedAt: Date;
+            }[];
+        };
+        pickup_location_lat: number;
+        pickup_location_lng: number;
+        pickup_description: string;
+        destination_location_lat: number;
+        destination_location_lng: number;
+        destination_description: string;
+        discount: number;
+        app_share_discount: number;
+        user_app_share: number;
+        user_debt: number;
+        payment_status: string | null;
+        payment_method: string | null;
+        promoCodeId: number | null;
+        passnger_id: number;
+        trip_id: number;
+        createdAt: Date;
+        updatedAt: Date;
+        trips: number;
+    }>;
+    private refundUserWallet;
+    private increamentUserAppShareCount;
+    private cancelTrip;
+    private getWalletsValues;
+    private userPenalty;
+    private driverPenalty;
+}
+declare const vipTripService: VipTripService;
+export default vipTripService;

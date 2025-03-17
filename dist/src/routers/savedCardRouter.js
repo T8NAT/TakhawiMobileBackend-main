@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_1 = __importDefault(require("../middlewares/auth"));
+const savedCardController_1 = __importDefault(require("../controllers/savedCardController"));
+const joiMiddleware_1 = require("../middlewares/joiMiddleware");
+const savedCardValidations_1 = require("../validations/savedCardValidations");
+const authorization_1 = __importDefault(require("../middlewares/authorization"));
+const roles_1 = require("../enum/roles");
+const router = (0, express_1.Router)();
+router.use(auth_1.default, (0, authorization_1.default)(roles_1.Roles.USER));
+router.post('/', savedCardController_1.default.create);
+router.get('/', savedCardController_1.default.getAll);
+router.delete('/:id', savedCardController_1.default.delete);
+router.post('/billing', (0, joiMiddleware_1.joiAsyncMiddleWare)(savedCardValidations_1.createUserBillingInfoValidation, 'body'), savedCardController_1.default.createUserBillingInfo);
+router.get('/billing', savedCardController_1.default.getUserBillingInfo);
+exports.default = router;
